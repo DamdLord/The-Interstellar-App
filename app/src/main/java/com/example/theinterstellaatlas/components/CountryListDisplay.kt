@@ -2,7 +2,6 @@ package com.example.theinterstellaatlas.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,7 +17,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
@@ -32,7 +30,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import com.example.theinterstellaatlas.AppViewModel
 import com.example.theinterstellaatlas.R
 import com.example.theinterstellaatlas.UiState
@@ -48,8 +45,7 @@ fun CountryListDisplay(
     onRetryClick: () -> Unit,
 ){
     if (!uiState.isLoading && uiState.hasWorked && countries.isNotEmpty()){
-        LazyColumn(
-        ) {
+        LazyColumn {
             items(countries.size){
                 CountryTile(
                     country = countries[it],
@@ -63,13 +59,13 @@ fun CountryListDisplay(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier.fillMaxWidth()
         ) {
-            Card(
+            OutlinedCard(
                 modifier = modifier
                     .fillMaxWidth()
                     .height(110.dp)
                     .padding(8.dp),
-                colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary),
-                elevation = CardDefaults.cardElevation(4.dp)
+                //colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary),
+                //elevation = CardDefaults.cardElevation(4.dp)
             ) {
                 Row(modifier = modifier.fillMaxWidth()) {
                     Card(
@@ -81,12 +77,22 @@ fun CountryListDisplay(
                     ) {
                     }
                     Spacer(modifier = modifier.width(5.dp))
-                    Text(
-                        text = appViewModel.errorMessage ?: "Something went wrong",
-                        modifier = modifier.padding(top = 38.dp, start = 10.dp),
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
+                    if(appViewModel.errorMessage.isNotEmpty()) {
+                        Text(
+                            text = appViewModel.errorMessage,
+                            modifier = modifier.padding(top = 38.dp, start = 10.dp),
+                            fontWeight = FontWeight.SemiBold,
+                            //color = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
+                    else{
+                        Text(
+                            text = "Something went wrong",
+                            modifier = modifier.padding(top = 38.dp, start = 10.dp),
+                            fontWeight = FontWeight.SemiBold,
+                            //color = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
                 }
             }
 
