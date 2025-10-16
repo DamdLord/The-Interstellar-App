@@ -119,7 +119,7 @@ fun HomeScreen(
 
                         }
                         Row(
-                            verticalAlignment = Alignment.Bottom
+                            verticalAlignment = Alignment.CenterVertically
                         ){
                             ExposedDropdownMenuBox(
                                 expanded = isExpanded,
