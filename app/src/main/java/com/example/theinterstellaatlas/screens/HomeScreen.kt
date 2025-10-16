@@ -1,7 +1,6 @@
 package com.example.theinterstellaatlas.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,12 +9,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -28,7 +25,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -41,7 +37,6 @@ import com.example.theinterstellaatlas.AppViewModel
 import com.example.theinterstellaatlas.Screens
 import com.example.theinterstellaatlas.UiState
 import com.example.theinterstellaatlas.components.CountryListDisplay
-import com.example.theinterstellaatlas.retrofitAndApi.Country
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,14 +48,15 @@ fun HomeScreen(
 ){
 
     var isExpanded by rememberSaveable { mutableStateOf(false) }
-    val regionList = listOf("Region", "Africa", "Americas", "Asia", "Europe", "Oceania", "Antarctic")
+    val regionList = listOf("Region","Africa", "Americas", "Asia", "Europe", "Oceania", "Antarctic")
     var chosenRegion by rememberSaveable { mutableStateOf(regionList[0]) }
     var searchingByRegion by rememberSaveable { mutableStateOf(false) }
     val countries = uiState.countries
-    var isFirstSet by rememberSaveable { mutableStateOf(true) }
 
-    LaunchedEffect(Unit) {
-        appViewModel.getAllCountries()
+    if(countries.isEmpty()){
+        LaunchedEffect(Unit) {
+            appViewModel.getAllCountries()
+        }
     }
 
     Scaffold(
@@ -126,7 +122,9 @@ fun HomeScreen(
                             onExpandedChange = { isExpanded = !isExpanded}
                         ) {
                             OutlinedTextField(
-                                value = chosenRegion,
+                                value = uiState.regionSelected.ifEmpty {
+                                    chosenRegion
+                                },
                                 onValueChange = {},
                                 readOnly = true,
                                 label = {  },
