@@ -29,6 +29,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -117,44 +118,62 @@ fun HomeScreen(
                             }
 
                         }
-                        ExposedDropdownMenuBox(
-                            expanded = isExpanded,
-                            onExpandedChange = { isExpanded = !isExpanded}
-                        ) {
-                            OutlinedTextField(
-                                value = uiState.regionSelected.ifEmpty {
-                                    chosenRegion
-                                },
-                                onValueChange = {},
-                                readOnly = true,
-                                label = {  },
-                                shape = RoundedCornerShape(15.dp),
-                                trailingIcon = {
-                                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
-                                },
-                                modifier = modifier
-                                    .width(150.dp)
-                                    .menuAnchor(),
-                                //colors = OutlinedTextFieldDefaults.colors(MaterialTheme.colorScheme.onPrimary)
-                            )
-
-                            ExposedDropdownMenu(
+                        Row(
+                            verticalAlignment = Alignment.Bottom
+                        ){
+                            ExposedDropdownMenuBox(
                                 expanded = isExpanded,
-                                onDismissRequest = { isExpanded = false }
+                                onExpandedChange = { isExpanded = !isExpanded}
                             ) {
-                                regionList.forEach { option ->
-                                    DropdownMenuItem(
-                                        text = { Text(option) },
-                                        onClick = {
-                                            isExpanded = false
-                                            chosenRegion = option
-                                            searchingByRegion = true
-                                            appViewModel.updateRegionSelected(option)
-                                            appViewModel.updateUiStateRegion(option)
-                                            appViewModel.getCountriesByRegion()
-                                        }
-                                    )
+                                OutlinedTextField(
+                                    value = uiState.regionSelected.ifEmpty {
+                                        chosenRegion
+                                    },
+                                    onValueChange = {},
+                                    readOnly = true,
+                                    label = {  },
+                                    shape = RoundedCornerShape(15.dp),
+                                    trailingIcon = {
+                                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
+                                    },
+                                    modifier = modifier
+                                        .width(150.dp)
+                                        .menuAnchor(),
+                                    //colors = OutlinedTextFieldDefaults.colors(MaterialTheme.colorScheme.onPrimary)
+                                )
+
+                                ExposedDropdownMenu(
+                                    expanded = isExpanded,
+                                    onDismissRequest = { isExpanded = false }
+                                ) {
+                                    regionList.forEach { option ->
+                                        DropdownMenuItem(
+                                            text = { Text(option) },
+                                            onClick = {
+                                                isExpanded = false
+                                                chosenRegion = option
+                                                searchingByRegion = true
+                                                appViewModel.updateRegionSelected(option)
+                                                appViewModel.updateUiStateRegion(option)
+                                                appViewModel.getCountriesByRegion()
+                                            }
+                                        )
+                                    }
                                 }
+                            }
+                            Spacer(modifier = modifier.width(10.dp))
+                            Button(
+                                onClick = {
+                                    searchingByRegion = false
+                                    appViewModel.getAllCountries()
+                                },
+                                shape = RoundedCornerShape(15.dp),
+                                colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
+                            ){
+                                Text(
+                                    text = "Get all countries",
+                                    color = MaterialTheme.colorScheme.onPrimary,
+                                )
                             }
                         }
                     }
